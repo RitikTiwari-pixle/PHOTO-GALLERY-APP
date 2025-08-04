@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Manage {{ event.name }}{% endblock %}
+{% block body_content %}
+<div class="d-flex">
+    <nav class="sidebar">
+        <div class="px-4 mb-4"><h5 class="fw-bold">EventPhotoAI</h5></div>
+        <ul class="nav nav-pills flex-column mb-auto px-2">
+            <li class="nav-item"><a href="{{ url_for('dashboard') }}" class="nav-link text-dark"><i data-feather="home" class="me-2"></i>Dashboard</a></li>
+            <li class="nav-item"><a href="{{ url_for('create_event') }}" class="nav-link text-dark"><i data-feather="plus-square" class="me-2"></i>Create Event</a></li>
+            <li class="nav-item"><a href="{{ url_for('my_events') }}" class="nav-link active"><i data-feather="calendar" class="me-2"></i>My Events</a></li>
+        </ul>
+        <div class="px-4 pb-3"><a href="{{ url_for('logout') }}" class="btn btn-light w-100 text-start"><i data-feather="log-out" class="me-2"></i>Logout</a></div>
+    </nav>
+    <main class="main-content">
+        <div class="container-fluid">
+            <h1 class="h2 mb-1">Event Details: {{ event.name }}</h1>
+            <!-- This line is now fixed -->
+            <p class="text-muted mb-5">Date: {{ event.date }} | <span class="fw-bold">{{ event.photos|length }} Photos Processed</span></p>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <h5 class="card-title">Event QR Code for Guest Access</h5>
+                    <p class="text-muted">Display this unique QR code at your event venue for guests to scan.</p>
+                    <img src="{{ qr_code_data_uri }}" alt="QR Code for {{ event.name }}" class="img-fluid my-3 rounded">
+                    <p class="text-muted">Guests simply scan the code with their smartphone camera.</p>
+                    <a href="{{ qr_code_data_uri }}" download="qr-code-{{ event.name | replace(' ', '-') }}.png" class="btn btn-primary"><i data-feather="download" class="me-1"></i>Download QR Code</a>
+                    <!-- This section is now added -->
+                    <hr class="my-4">
+                    <p class="small text-muted mb-1">To test this locally, open this link in a new tab on this computer:</p>
+                    <a href="{{ event_url }}" target="_blank">{{ event_url }}</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

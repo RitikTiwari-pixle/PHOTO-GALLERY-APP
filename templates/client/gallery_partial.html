@@ -1,0 +1,43 @@
+<!-- This file goes inside the 'templates/client/' folder -->
+
+<div class="text-center">
+    <h3 class="mt-5 mb-1 fw-bold">Your Personalized Photo Gallery</h3>
+    <p class="text-muted">{{ photo_urls|length }} AI-matched photos found from the event. Tap to view larger!</p>
+</div>
+<div class="d-flex justify-content-between align-items-center my-4">
+    <button class="btn btn-light" onclick="window.location.reload()"><i data-feather="arrow-left" class="me-1"></i>Scan Again</button>
+    <a href="#" class="btn btn-primary"><i data-feather="download" class="me-1"></i>Download All</a>
+</div>
+<div class="row row-cols-2 row-cols-md-3 g-3 photo-gallery">
+    {% for url in photo_urls %}
+    <div class="col">
+        <a href="#" data-bs-toggle="modal" data-bs-target="#photoModal" data-bs-photo-url="{{ url }}">
+            <img src="{{ url }}" class="img-fluid shadow-sm" alt="A photo from the event">
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Modal for larger image view -->
+<div class="modal fade" id="photoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body p-0">
+        <img id="modalImage" src="" class="img-fluid">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    feather.replace(); // Re-run Feather icons after injecting HTML
+    const photoModal = document.getElementById('photoModal');
+    if (photoModal) {
+        photoModal.addEventListener('show.bs.modal', event => {
+          const button = event.relatedTarget;
+          const photoUrl = button.getAttribute('data-bs-photo-url');
+          const modalImage = photoModal.querySelector('#modalImage');
+          modalImage.src = photoUrl;
+        });
+    }
+</script>

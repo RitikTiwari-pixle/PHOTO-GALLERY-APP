@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block body_content %}
+<div class="d-flex">
+    <nav class="sidebar">
+        <div class="px-4 mb-4">
+            <h5 class="fw-bold">EventPhotoAI</h5>
+        </div>
+        <ul class="nav nav-pills flex-column mb-auto px-2">
+            <li class="nav-item"><a href="{{ url_for('dashboard') }}" class="nav-link active"><i data-feather="home" class="me-2"></i>Dashboard</a></li>
+            <li class="nav-item"><a href="{{ url_for('create_event') }}" class="nav-link text-dark"><i data-feather="plus-square" class="me-2"></i>Create Event</a></li>
+            <!-- This link is now fixed -->
+            <li class="nav-item"><a href="{{ url_for('my_events') }}" class="nav-link text-dark"><i data-feather="calendar" class="me-2"></i>My Events</a></li>
+        </ul>
+        <div class="px-4 pb-3">
+            <a href="{{ url_for('logout') }}" class="btn btn-light w-100 text-start"><i data-feather="log-out" class="me-2"></i>Logout</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container-fluid">
+            <h1 class="h2 mb-4">Welcome, Administrator!</h1>
+            <p class="text-muted mb-5">Manage your events and guest photos efficiently with EventPhotoAI.</p>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <h5 class="mb-3">Quick Actions</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <a href="{{ url_for('create_event') }}" class="card h-100 border-0 shadow-sm text-decoration-none text-dark">
+                                <div class="card-body">
+                                    <i data-feather="plus" class="text-primary mb-2" style="width: 32px; height: 32px;"></i>
+                                    <h6 class="mb-1">Create New Event</h6>
+                                    <p class="small text-muted mb-0">Set up a new event, define details, and prepare for photo uploads.</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <!-- This link is now fixed -->
+                             <a href="{{ url_for('my_events') }}" class="card h-100 border-0 shadow-sm text-decoration-none text-dark">
+                                <div class="card-body">
+                                    <i data-feather="edit" class="text-primary mb-2" style="width: 32px; height: 32px;"></i>
+                                    <h6 class="mb-1">Manage Existing Events</h6>
+                                    <p class="small text-muted mb-0">View, edit, or delete your past and upcoming events.</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <h5 class="mb-3">Event Statistics</h5>
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-muted">Active Events</span><span class="fw-bold">{{ stats.active_events }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-muted">Total Photos Uploaded</span><span class="fw-bold">{{ stats.total_photos }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted">Guests Served</span><span class="fw-bold">{{ stats.guests_served }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="mt-4 mb-3">Recent Activity</h5>
+            <div class="card border-0 shadow-sm">
+                <ul class="list-group list-group-flush">
+                    {% for event in recent_events %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">{{ event.name }}</h6>
+                            <small class="text-muted">{{ event.date }}</small>
+                        </div>
+                        <span class="badge bg-light text-dark">{{ event.photos|length }} photos</span>
+                    </li>
+                    {% else %}
+                    <li class="list-group-item text-muted">No recent activity. Create an event to get started!</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

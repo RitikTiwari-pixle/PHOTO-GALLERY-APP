@@ -1,0 +1,87 @@
+<!-- This file goes inside the 'templates/admin/' folder -->
+
+{% extends "layout.html" %}
+{% block title %}Create New Event{% endblock %}
+{% block body_content %}
+<div class="d-flex">
+    <nav class="sidebar">
+        <div class="px-4 mb-4"><h5 class="fw-bold">EventPhotoAI</h5></div>
+        <ul class="nav nav-pills flex-column mb-auto px-2">
+            <li class="nav-item"><a href="{{ url_for('dashboard') }}" class="nav-link text-dark"><i data-feather="home" class="me-2"></i>Dashboard</a></li>
+            <li class="nav-item"><a href="{{ url_for('create_event') }}" class="nav-link active"><i data-feather="plus-square" class="me-2"></i>Create Event</a></li>
+            <li class="nav-item"><a href="{% url 'my_events' %}" class="nav-link text-dark"><i data-feather="calendar" class="me-2"></i>My Events</a></li>
+        </ul>
+        <div class="px-4 pb-3"><a href="{{ url_for('logout') }}" class="btn btn-light w-100 text-start"><i data-feather="log-out" class="me-2"></i>Logout</a></div>
+    </nav>
+    <main class="main-content">
+        <div class="container-fluid">
+            <h1 class="h2 mb-4">Create New Event</h1>
+            <form action="{{ url_for('create_event') }}" method="POST" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-body p-4">
+                                <h5 class="card-title">Event Details</h5>
+                                <p class="card-subtitle mb-3 text-muted">Define the core information for your event.</p>
+                                <div class="mb-3"><label class="form-label">Event Name</label><input type="text" class="form-control" name="event_name" required></div>
+                                <div class="mb-3"><label class="form-label">Event Date</label><input type="date" class="form-control" name="event_date"></div>
+                                <div class="mb-3"><label class="form-label">Location</label><input type="text" class="form-control" name="location"></div>
+                                <div class="mb-3"><label class="form-label">Description</label><textarea class="form-control" name="description" rows="4"></textarea></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                <h5 class="card-title">Upload Event Photos</h5>
+                                <p class="card-subtitle mb-3 text-muted">Drag & drop or select photos to upload them in bulk.</p>
+                                <div id="drop-zone" class="drop-zone">
+                                    <p>Drag & drop photos here, or click to browse</p>
+                                    <input type="file" id="photo-input" name="photos" multiple hidden>
+                                    <small class="text-muted">Supports JPG, PNG, HEIC, up to 50MB each</small>
+                                </div>
+                                <div id="preview-container" class="mt-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 text-end">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-light me-2">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Create Event & Proceed</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+const dropZone = document.getElementById('drop-zone');
+const photoInput = document.getElementById('photo-input');
+const previewContainer = document.getElementById('preview-container');
+dropZone.addEventListener('click', () => photoInput.click());
+dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('dragover'); });
+dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    photoInput.files = e.dataTransfer.files;
+    handleFiles(photoInput.files);
+});
+photoInput.addEventListener('change', () => { handleFiles(photoInput.files); });
+function handleFiles(files) {
+    previewContainer.innerHTML = '';
+    if (files.length > 0) {
+        const list = document.createElement('ul');
+        list.className = 'list-group';
+        for (const file of files) {
+            const listItem = document.createElement('li');
+            listItem.className = 'list-group-item';
+            listItem.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+            list.appendChild(listItem);
+        }
+        previewContainer.appendChild(list);
+    }
+}
+</script>
+{% endblock %}
